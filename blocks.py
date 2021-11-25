@@ -78,26 +78,9 @@ class FinalBlock(nn.Module):
         self.bn = nn.BatchNorm2d(sconv_out)
         self.dropout = nn.Dropout(p=dropout_rate)
         self.fully_connected = nn.Linear(in_features=sconv_out, out_features=out_size)
-        self.softmax = nn.Softmax(dim=1)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, input_tensor):
         sconv_pass_result = F.relu(self.bn(self.sconv(input_tensor)))
         pooled = torch.mean(sconv_pass_result, dim=(-1, -2)) # global average pooling
         return self.softmax(self.fully_connected(self.dropout(pooled)))
-
-
-if __name__ == "__main__":
-    dummy_input = torch.zeros((10, 1, 100, 100))  # batch, single-channel-image
-
-    CO = 64
-    SO = 128
-
-    fb = FirstBlock(conv_out=CO)
-    result = fb(dummy_input)
-    ib = InnerBlock(in_channels=CO, sconv_out=SO)
-    result = ib(result)
-    finb = FinalBlock(SO, out_size=172)
-    result = finb(result)
-
-    print(result.shape)
-    print(result)

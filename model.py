@@ -8,8 +8,9 @@ from blocks import FirstBlock, InnerBlock, FinalBlock
 
 class Glyphnet(nn.Module):
     """
-        Certain hyperparams are hardcoded, otherwise the whole configuration
-        would have been passed as a dict or a long sequence of parameters to the __init__ method
+        Some hyperparameters are hardcoded, otherwise the whole configuration
+        would have been passed as a dict or a long sequence of parameters to the __init__ method,
+        which may be ugly yet the right thing to do; I decided I won't do that.
     """
 
     def __init__(self, in_channels=1,
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     print("Total:", sum(p.numel() for p in model.parameters()))
     print("Trainable:", sum(p.numel() for p in model.parameters() if p.requires_grad))
 
-    dummy_input = torch.zeros((1, 1, 100, 100))  # batch, single-channel-image
+    dummy_input = torch.zeros((256, 1, 100, 100))  # batch, single-channel-image
     result = model(dummy_input)
 
     print(result.shape)
