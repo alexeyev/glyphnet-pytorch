@@ -96,7 +96,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", default=8)
     # parser.add_argument("--l1size", default=128)
     # parser.add_argument("--dropout", default=0.8)
-    parser.add_argument("--epochs", default=10)
+    parser.add_argument("--epochs", default=50)
     parser.add_argument("--train_path", default="prepared_data/train/")
     parser.add_argument("--test_path", default="prepared_data/test/")
     args = parser.parse_args()
