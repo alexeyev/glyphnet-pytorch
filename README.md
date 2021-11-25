@@ -13,7 +13,15 @@ We hope that this PyTorch implementation of the model will encourage
 the further research in this direction; there is clearly a lot 
 of work to do.
 
+## Research Questions to Be Addressed in the Future
+
+1. Is the Unas pyramids dataset as easy-to-solve as MNIST? Should check kNN/MLP approaches.
+2. If not, the model can be informed and simplified using a pattern matching layer (unicode 
+hieroglyphs scaled to the required image size).
+3. Metric learning approach should also be worthwhile; judging by the data, mining hard negative
+samples could help.
+
 ## Notes
 
-* Do not confuse with another [GlyphNet project](https://github.com/noahtren/GlyphNet) 
+* Please do not confuse this work with another [GlyphNet project](https://github.com/noahtren/GlyphNet) 
 training networks to communicate using a visual language
