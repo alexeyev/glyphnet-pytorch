@@ -8,6 +8,12 @@ from torchvision.datasets import ImageFolder
 class GlyphData(ImageFolder):
 
     def __init__(self, class_to_idx: Dict[str, int], root: str = "prepared_data/train/", *args, **kwargs):
+        """
+            Reading GlyphDataset as an ImageFolder with the custom class-to-id mapping.
+
+        :param class_to_idx: custom mapping of labels (str) to IDs (int)
+        :param root: train or test data directory
+        """
         self.classes_list = ["UNKNOWN" for _ in range(max(class_to_idx.values()) + 1)]
         self.classes_map = class_to_idx
 

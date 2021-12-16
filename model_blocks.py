@@ -23,7 +23,7 @@ class SeparableConv2d(nn.Module):
         # the feature map to another one with the required number of `out_channels`
         self.pointwise = nn.Conv2d(in_channels=in_channels, out_channels=out_channels,
                                    kernel_size=(1, 1), bias=bias)
-        # ...so essentially this is a 'factorization' of heavier convolutions
+        # ...so essentially this is a 'factorization' of 'heavier' convolutions
 
     def forward(self, x):
         return self.pointwise(self.depthwise(x))
@@ -82,5 +82,7 @@ class FinalBlock(nn.Module):
 
     def forward(self, input_tensor):
         sconv_pass_result = F.relu(self.bn(self.sconv(input_tensor)))
+
+        # computing average over
         pooled = torch.mean(sconv_pass_result, dim=(-1, -2)) # global average pooling
         return self.softmax(self.fully_connected(self.dropout(pooled)))

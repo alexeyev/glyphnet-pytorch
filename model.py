@@ -2,12 +2,15 @@
 
 from torch import nn
 from torch.nn import Sequential
+import logging
 
-from blocks import FirstBlock, InnerBlock, FinalBlock
+from model_blocks import FirstBlock, InnerBlock, FinalBlock
 
 
 class Glyphnet(nn.Module):
     """
+        PyTorch GlyphNet hieroglyph classifier implementation.
+
         Some hyperparameters are hardcoded, otherwise the whole configuration
         would have been passed as a dict or a long sequence of parameters to the __init__ method,
         which may be ugly yet the right thing to do; I decided I won't do that.
@@ -18,6 +21,13 @@ class Glyphnet(nn.Module):
                  first_conv_out=64,
                  last_sconv_out=512,
                  sconv_seq_outs=(128, 128, 256, 256)):
+        """
+        :param in_channels: the number of channels in the input image
+        :param num_classes: the number of labels for prediction
+        :param first_conv_out:
+        :param last_sconv_out:
+        :param sconv_seq_outs:
+        """
 
         super(Glyphnet, self).__init__()
         self.first_block = FirstBlock(in_channels, first_conv_out)
@@ -39,7 +49,6 @@ if __name__ == "__main__":
     import torch
 
     model = Glyphnet()
-    # print(model)
 
     print("...the proposed network has a much lower number of parameters, "
           "which is only 498856 (of which 494504 are trainable), compared to the...")
