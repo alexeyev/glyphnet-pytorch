@@ -22,6 +22,13 @@ An entry point is the script `prepare_data.sh` that downloads the dataset and sp
 parts in a 'stratified' manner, i.e. keeping all labels with just a single image in the training set, 
 yet preserving similar label counts distributions in each part of the dataset. 
 
+It should print
+
+    DEBUG:root:Labels total: 172
+    DEBUG:root:Labels seen just once: 37
+
+before shutting down.
+
 ## Notes
 
 * Please do not confuse this work with another [GlyphNet project](https://github.com/noahtren/GlyphNet) 

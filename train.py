@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import torch
+import logging
 import numpy as np
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
@@ -42,7 +43,7 @@ def train(model: nn.Module, train_loader: DataLoader, optimizer: optim.Optimizer
         optimizer.step()
 
         if batch_idx % batch_reports_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tAveraged Epoch Loss: {:.6f}'.format(
+            logging.debug('Train Epoch: {} [{}/{} ({:.0f}%)]\tAveraged Epoch Loss: {:.6f}'.format(
                 current_epoch_number + 1,
                 batch_idx * len(data),
                 len(train_loader.dataset),
@@ -74,21 +75,25 @@ def test(model: nn.Module, test_loader: DataLoader, loss_function: nn.Module, de
 
     test_loss /= len(test_loader.dataset)
 
-    print('...Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
+    logging.debug('...Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
 
     y_pred = np.concatenate(all_predictions)
     y_true = np.concatenate(all_gold)
 
-    print("Acc.: %2.2f%%; F-macro: %2.2f%%\n" % (accuracy_score(y_true, y_pred) * 100,
-                                           f1_score(y_true, y_pred, average="macro") * 100))
+    logging.debug("Acc.: %2.2f%%; F-macro: %2.2f%%\n" % (accuracy_score(y_true, y_pred) * 100,
+                                                 f1_score(y_true, y_pred, average="macro") * 100))
 
 
 if __name__ == "__main__":
 
     from argparse import ArgumentParser
     from os import listdir
+    import logging
+
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
 
     parser = ArgumentParser()
     parser.add_argument("--seed", default=160)
@@ -101,13 +106,13 @@ if __name__ == "__main__":
     parser.add_argument("--test_path", default="prepared_data/test/")
     args = parser.parse_args()
 
-    train_labels = {l:i for i, l in enumerate(sorted([p.strip("/") for p in listdir(args.train_path)]))}
+    train_labels = {l: i for i, l in enumerate(sorted([p.strip("/") for p in listdir(args.train_path)]))}
 
     train_set = GlyphData(root=args.train_path, class_to_idx=train_labels,
                           transform=transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                                         transforms.ToTensor()]))
 
-    print("Splitting data...")
+    logging.info("Splitting data...")
 
     train_indices, val_indices, _, _ = train_test_split(
         range(len(train_set)),
@@ -125,23 +130,23 @@ if __name__ == "__main__":
                                              shuffle=False,
                                              batch_size=128)
 
-    print("CUDA available?", torch.cuda.is_available())
+    logging.info(f"CUDA available? {torch.cuda.is_available()}")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    print("Setting up a model...")
+    logging.info("Setting up a model...")
 
     model = Glyphnet().to(device)
     optimizer = optim.AdamW(model.parameters(), amsgrad=True)
     loss_function = loss.CrossEntropyLoss()
 
-    print("Starting training...")
+    logging.info("Starting training...")
 
     for epoch in range(args.epochs):
         train(model, train_loader, optimizer, loss_function, epoch, device)
         test(model, val_loader, loss_function, device)
 
-        print("Goodness of fit (evaluation on train):")
+        logging.info("Goodness of fit (evaluation on train):")
         test(model, train_loader, loss_function, device)
 
     #  FINAL EVALUATION
@@ -156,5 +161,5 @@ if __name__ == "__main__":
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=128, shuffle=False)
     model.eval()
 
-    print("Checking quality on test set:")
+    logging.info("Checking quality on test set:")
     test(model, test_loader, loss_function, device)

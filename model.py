@@ -33,11 +33,10 @@ class Glyphnet(nn.Module):
         self.first_block = FirstBlock(in_channels, first_conv_out)
         in_channels_sizes = [first_conv_out] + list(sconv_seq_outs)
         self.inner_blocks = Sequential(*(InnerBlock(in_channels=i, sconv_out=o)
-                                        for i, o in zip(in_channels_sizes, sconv_seq_outs)))
+                                         for i, o in zip(in_channels_sizes, sconv_seq_outs)))
         self.final_block = FinalBlock(in_channels=in_channels_sizes[-1], out_size=num_classes, sconv_out=last_sconv_out)
 
     def forward(self, image_input_tensor):
-
         x = self.first_block(image_input_tensor)
         x = self.inner_blocks(x)
         x = self.final_block(x)
