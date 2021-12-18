@@ -1,8 +1,11 @@
 # coding: utf-8
 
-import torch
 import logging
+from os import listdir
+
+import hydra
 import numpy as np
+import torch
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from torch import nn
@@ -83,32 +86,14 @@ def test(model: nn.Module, test_loader: DataLoader, loss_function: nn.Module, de
     y_true = np.concatenate(all_gold)
 
     logging.debug("Acc.: %2.2f%%; F-macro: %2.2f%%\n" % (accuracy_score(y_true, y_pred) * 100,
-                                                 f1_score(y_true, y_pred, average="macro") * 100))
+                                                         f1_score(y_true, y_pred, average="macro") * 100))
 
 
-if __name__ == "__main__":
+@hydra.main("configs", "config")
+def main(cfg):
+    train_labels = {l: i for i, l in enumerate(sorted([p.strip("/") for p in listdir(cfg.data.train_path)]))}
 
-    from argparse import ArgumentParser
-    from os import listdir
-    import logging
-
-    root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
-
-    parser = ArgumentParser()
-    parser.add_argument("--seed", default=160)
-    parser.add_argument("--val_fraction", default=0.3)
-    parser.add_argument("--batch_size", default=8)
-    # parser.add_argument("--l1size", default=128)
-    # parser.add_argument("--dropout", default=0.8)
-    parser.add_argument("--epochs", default=50)
-    parser.add_argument("--train_path", default="prepared_data/train/")
-    parser.add_argument("--test_path", default="prepared_data/test/")
-    args = parser.parse_args()
-
-    train_labels = {l: i for i, l in enumerate(sorted([p.strip("/") for p in listdir(args.train_path)]))}
-
-    train_set = GlyphData(root=args.train_path, class_to_idx=train_labels,
+    train_set = GlyphData(root=cfg.data.train_path, class_to_idx=train_labels,
                           transform=transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                                         transforms.ToTensor()]))
 
@@ -118,13 +103,13 @@ if __name__ == "__main__":
         range(len(train_set)),
         train_set.targets,
         # stratify=train_set.targets,
-        test_size=args.val_fraction,
+        test_size=cfg.data.val_fraction,
         shuffle=True,
-        random_state=args.seed
+        random_state=cfg.model.seed
     )
 
     train_loader = torch.utils.data.DataLoader(Subset(train_set, train_indices),
-                                               batch_size=args.batch_size,
+                                               batch_size=cfg.model.batch_size,
                                                shuffle=True)
     val_loader = torch.utils.data.DataLoader(Subset(train_set, val_indices),
                                              shuffle=False,
@@ -142,7 +127,7 @@ if __name__ == "__main__":
 
     logging.info("Starting training...")
 
-    for epoch in range(args.epochs):
+    for epoch in range(cfg.model.epochs):
         train(model, train_loader, optimizer, loss_function, epoch, device)
         test(model, val_loader, loss_function, device)
 
@@ -151,10 +136,10 @@ if __name__ == "__main__":
 
     #  FINAL EVALUATION
 
-    test_labels_set = {l for l in [p.strip("/") for p in listdir(args.test_path)]}
+    test_labels_set = {l for l in [p.strip("/") for p in listdir(cfg.data.test_path)]}
     test_labels = {k: v for k, v in train_labels.items() if k in test_labels_set}
 
-    test_set = GlyphData(root=args.test_path, class_to_idx=test_labels,
+    test_set = GlyphData(root=cfg.data.test_path, class_to_idx=test_labels,
                          transform=transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                                        transforms.ToTensor()]))
 
@@ -163,3 +148,10 @@ if __name__ == "__main__":
 
     logging.info("Checking quality on test set:")
     test(model, test_loader, loss_function, device)
+
+
+if __name__ == "__main__":
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+
+    main()

@@ -1,7 +1,7 @@
 # glyphnet-pytorch
 ...a.k.a. cracking **MNIST: Ancient Egypt Edition**
 
-This repository presents a custom PyTorch-based implementation of the **Glyphnet** 
+This repository presents a custom (non-official) PyTorch-based implementation of the **Glyphnet** 
 classifier introduced in the work [A Deep Learning Approach 
 to Ancient Egyptian Hieroglyphs 
 Classification, 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9528382) 

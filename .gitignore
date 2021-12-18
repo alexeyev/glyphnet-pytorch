@@ -1,7 +1,7 @@
 .idea
 .pytest*
 data
+results
 prepared_data
 *.pyc
 *~
-outputs

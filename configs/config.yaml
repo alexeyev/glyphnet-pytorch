@@ -1,20 +1,19 @@
 defaults:
-  - embeddings: word2vec-custom
+  - model: glyphnet
   - optimizer: adam
   - override hydra/launcher: joblib
   - _self_
 
 data:
-  path: "reviews_Cell_Phones_and_Accessories_5.json.txt"
+  train_path: "prepared_data/train/"
+  val_fraction: 0.3
+  test_path: "prepared_data/test/"
 
 model:
-  batch_size: 50
-  ortho_reg: 0.2
-  aspects_number: 25
+  batch_size: 8
   epochs: 1
-  negative_samples: 5
-  max_len: 201
   log_progress_steps: 1000
+  seed: 261
 
 hydra:
   job:
@@ -27,4 +26,4 @@ hydra:
     subdir: ${hydra.job.override_dirname}
   help:
     template:
-      "This is the script for training ABAE reimplemented in PyTorch"
+      "This is the script for training GlyphNet reimplemented in PyTorch"
