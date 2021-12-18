@@ -1,5 +1,4 @@
 # glyphnet-pytorch
-...a.k.a. cracking **MNIST: Ancient Egypt Edition**
 
 This repository presents a custom (non-official) PyTorch-based implementation of the **Glyphnet** 
 classifier introduced in the work [A Deep Learning Approach 
@@ -16,7 +15,9 @@ the further research in this direction.
 
 Please see `requirements.txt`.
 
-## Setting everything up
+## Quickstart
+
+### Setting everything up
 
 An entry point is the script `prepare_data.sh` that downloads the dataset and splits it into train/test 
 parts in a 'stratified' manner, i.e. keeping all labels with just a single image in the training set, 
@@ -28,6 +29,55 @@ It should print
     DEBUG:root:Labels seen just once: 37
 
 before shutting down.
+
+### Training
+
+Training script `train.py` uses standard **hydra** configuration mechanism; modifiable parameters
+can be found in `configs/...`.
+
+```bash
+python3 train.py model.epochs=2
+``` 
+
+## How to cite
+
+If you use the GlyphNet model, please cite the original work:
+
+```bibtex
+@article{barucci2021deep,
+  title={A Deep Learning Approach to Ancient Egyptian Hieroglyphs Classification},
+  author={Barucci, Andrea and Cucci, Costanza and Franci, Massimiliano and Loschiavo, Marco and Argenti, Fabrizio},
+  journal={IEEE Access},
+  volume={9},
+  pages={123438--123447},
+  year={2021},
+  publisher={IEEE}
+}
+```
+
+If you use the dataset, please cite the original work:
+
+```bibtex
+@inproceedings{franken2013automatic,
+  title={Automatic Egyptian hieroglyph recognition by retrieving images as texts},
+  author={Franken, Morris and van Gemert, Jan C},
+  booktitle={Proceedings of the 21st ACM international conference on Multimedia},
+  pages={765--768},
+  year={2013}
+}
+```
+
+Citing this repository is also appreciated.
+
+```bibtex
+@misc{glyphnetpytorch2021alekseev,
+  title     = {{alexeyev/glyphnet-pytorch: GlyphNet, PyTorch implementation}},
+  author    = {Anton Alekseev}, 
+  year      = {2021},
+  url       = {https://github.com/alexeyev/glyphnet-pytorch},
+  language  = {english}
+}
+```
 
 ## Notes
 
