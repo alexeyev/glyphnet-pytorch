@@ -6,7 +6,12 @@ to Ancient Egyptian Hieroglyphs
 Classification, 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9528382) 
 and apply it to the data accompanying the work ["Automatic Egyptian 
 Hieroglyph Recognition by Retrieving Images as Texts", 2013](https://jvgemert.github.io/pub/FrankenACMMM13egyptian.pdf) 
-(NB! GlyphNet paper uses a larger dataset).
+(NB! Glyphnet paper uses a larger dataset).
+
+
+**Image** | ![aren't they pretty](/sample_images/230128_G17.png) | ![aren't they pretty](/sample_images/230067_G26.png) | ![aren't they pretty](/sample_images/230034_G25.png) 
+------------ | ------------ | ------------- | -------------
+**Gardiner code** | G17 | G26 | G25
 
 We hope that this implementation of the model will encourage
 the further research in this direction.
@@ -88,5 +93,7 @@ Citing this repository is also appreciated:
 
 ## Notes
 
+* [morrisfranken/glyphreader](https://github.com/morrisfranken/glyphreader), 
+  the source of the [Pyramid of Unas](https://en.wikipedia.org/wiki/Pyramid_of_Unas) data
 * Please do not confuse this work with another [GlyphNet project](https://github.com/noahtren/GlyphNet) 
   training networks to communicate using a visual language
