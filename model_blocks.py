@@ -30,21 +30,28 @@ class SeparableConv2d(nn.Module):
 
 
 class FirstBlock(nn.Module):
+    """ Two regular convolution blocks. Input image -- to a feature map. """
 
     def __init__(self, in_channels=1,
                  conv_out=64, conv_kernel_size=(3, 3), conv_stride=(1, 1),
                  mp_kernel_size=(3, 3), mp_stride=(2, 2)):
         super(FirstBlock, self).__init__()
 
+        # a regular convolution block: conv2d + batch_norm + max_pooling
         self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=conv_out,
                                kernel_size=conv_kernel_size, stride=conv_stride, padding=1)
         self.bn1 = nn.BatchNorm2d(conv_out)
         self.mp1 = nn.MaxPool2d(kernel_size=mp_kernel_size, stride=mp_stride, padding=1)
 
+        # ...then ReLU
+
+        # ...then yet another regular convolution block: conv2d + batch_norm + max_pooling
         self.conv2 = nn.Conv2d(in_channels=conv_out, out_channels=conv_out,
                                kernel_size=conv_kernel_size, stride=conv_stride, padding=1)
         self.bn2 = nn.BatchNorm2d(conv_out)
         self.mp2 = nn.MaxPool2d(kernel_size=mp_kernel_size, stride=mp_stride, padding=1)
+
+        # ...then ReLU.
 
     def forward(self, images_tensor):
         first_pass_output = F.relu(self.mp1(self.bn1(self.conv1(images_tensor))))
@@ -53,6 +60,7 @@ class FirstBlock(nn.Module):
 
 
 class InnerBlock(nn.Module):
+    """ Inception-like block: separable convolutions, batch-normalizations, activations and max-pooling """
 
     def __init__(self, in_channels, sconv_out=128, sconv_kernel_size=(3, 3), mp_kernel_size=(3, 3), mp_stride=(2, 2)):
         super(InnerBlock, self).__init__()
@@ -70,6 +78,9 @@ class InnerBlock(nn.Module):
 
 
 class FinalBlock(nn.Module):
+    """
+        The block of GlyphNet preparing the outputs:
+        separable convolution + global average pooling + dropout + MLP + softmax"""
 
     def __init__(self, in_channels=256, out_size=172, sconv_out=512, sconv_kernel_size=(3, 3), dropout_rate=0.15):
 
@@ -83,6 +94,6 @@ class FinalBlock(nn.Module):
     def forward(self, input_tensor):
         sconv_pass_result = F.relu(self.bn(self.sconv(input_tensor)))
 
-        # computing average over
+        # computing average over each feature map
         pooled = torch.mean(sconv_pass_result, dim=(-1, -2)) # global average pooling
         return self.softmax(self.fully_connected(self.dropout(pooled)))

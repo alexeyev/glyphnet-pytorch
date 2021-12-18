@@ -69,9 +69,15 @@ def test(model: nn.Module, test_loader: DataLoader, loss_function: nn.Module, de
 
     with torch.no_grad():
         for data, target in test_loader:
+
+            # getting y_true
             target = target.to(device)
+
+            # getting y_pred
             output = model(data.to(device))
             pred = softmax2predictions(output)
+
+            # accumulating loss and accuracy
             test_loss += loss_function(output, target).sum().item()
             correct += pred.eq(target.view_as(pred)).sum().item()
             all_predictions.append(pred.numpy())
@@ -92,8 +98,8 @@ def test(model: nn.Module, test_loader: DataLoader, loss_function: nn.Module, de
 
 @hydra.main("configs", "config")
 def main(cfg):
-    root = logging.getLogger()
 
+    # preparing data directories for processing
     train_path = os.path.join(hydra.utils.get_original_cwd(), cfg.data.train_path)
     test_path = os.path.join(hydra.utils.get_original_cwd(), cfg.data.test_path)
 
@@ -122,19 +128,29 @@ def main(cfg):
                                              batch_size=128)
 
     logging.info(f"CUDA available? {torch.cuda.is_available()}")
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     logging.info("Setting up a model...")
+    model = Glyphnet(num_classes=len(train_labels),
+                     first_conv_out=cfg.model.first_convolution_filters,
+                     last_sconv_out=cfg.model.last_separable_convolution_filters,
+                     sconv_seq_outs=cfg.model.inner_separable_convolution_filters_seq,
+                     dropout_rate=cfg.model.dropout
+                     ).to(device)
 
-    model = Glyphnet().to(device)
-    optimizer = optim.AdamW(model.parameters(), amsgrad=True)
+    if cfg.optimizer.name == "Adam":
+        optimizer = torch.optim.Adam(model.parameters())
+    elif cfg.optimizer.name == "AdamW":
+        optimizer = torch.optim.AdamW(model.parameters(), amsgrad=True)
+    else:
+        raise Exception(f"Unknown optimizer [{cfg.optimizer.name}]!")
+
     loss_function = loss.CrossEntropyLoss()
-
     logging.info("Starting training...")
 
     for epoch in range(cfg.model.epochs):
         train(model, train_loader, optimizer, loss_function, epoch, device)
+        logging.info("Evaluation on development set:")
         test(model, val_loader, loss_function, device)
 
         logging.info("Goodness of fit (evaluation on train):")
@@ -154,6 +170,9 @@ def main(cfg):
 
     logging.info("Checking quality on test set:")
     test(model, test_loader, loss_function, device)
+
+    logging.info("Saving the trained model.")
+    torch.save(model, "checkpoint.bin")
 
 
 if __name__ == "__main__":

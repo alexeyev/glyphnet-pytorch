@@ -17,6 +17,8 @@ Please see `requirements.txt`.
 
 ## Quickstart
 
+**TL;DR: run `prepare_data.sh`, then `main.py`.**
+
 ### Setting everything up
 
 An entry point is the script `prepare_data.sh` that downloads the dataset and splits it into train/test 
@@ -32,11 +34,11 @@ before shutting down.
 
 ### Training
 
-Training script `train.py` uses standard **hydra** configuration mechanism; modifiable parameters
-can be found in `configs/...`.
+Training script `main.py` uses standard **hydra** configuration mechanism; the parameters one can modify
+at the CLI call can be found in `configs/...`.
 
 ```bash
-python3 train.py model.epochs=2
+python3 main.py model.epochs=2
 ``` 
 
 ## How to cite
@@ -67,7 +69,7 @@ If you use the dataset, please cite the original work:
 }
 ```
 
-Citing this repository is also appreciated.
+Citing this repository is also appreciated:
 
 ```bibtex
 @misc{glyphnetpytorch2021alekseev,
@@ -79,7 +81,12 @@ Citing this repository is also appreciated.
 }
 ```
 
+## TODO
+
+* Add a practical usage scenario using [data augmentation](https://albumentations.ai/)
+* Add an end-to-end image-to-prediction inference script using a pre-trained GlyphNet model 
+
 ## Notes
 
 * Please do not confuse this work with another [GlyphNet project](https://github.com/noahtren/GlyphNet) 
-training networks to communicate using a visual language
+  training networks to communicate using a visual language

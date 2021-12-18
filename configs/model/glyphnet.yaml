@@ -1,4 +1,6 @@
 name: GlyphNet-as-in-the-paper
 
-l1size: 128
-dropout: 0.8
+dropout: 0.15
+first_convolution_filters: 64
+last_separable_convolution_filters: 512
+inner_separable_convolution_filters_seq: [128, 128, 256, 256]

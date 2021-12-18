@@ -21,6 +21,8 @@ hydra:
       override_dirname:
         exclude_keys:
           - model.log_progress_steps
+  run:
+    dir: ./results/${now:%Y-%m-%d_%H-%M-%S}
   sweep:
     dir: results/${data.path}/
     subdir: ${hydra.job.override_dirname}
