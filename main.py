@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import logging
+import os
 from os import listdir
 
 import hydra
@@ -46,7 +47,7 @@ def train(model: nn.Module, train_loader: DataLoader, optimizer: optim.Optimizer
         optimizer.step()
 
         if batch_idx % batch_reports_interval == 0:
-            logging.debug('Train Epoch: {} [{}/{} ({:.0f}%)]\tAveraged Epoch Loss: {:.6f}'.format(
+            logging.info('Train Epoch: {} [{}/{} ({:.0f}%)]\tAveraged Epoch Loss: {:.6f}'.format(
                 current_epoch_number + 1,
                 batch_idx * len(data),
                 len(train_loader.dataset),
@@ -78,22 +79,27 @@ def test(model: nn.Module, test_loader: DataLoader, loss_function: nn.Module, de
 
     test_loss /= len(test_loader.dataset)
 
-    logging.debug('...Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
+    logging.info('    Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
 
     y_pred = np.concatenate(all_predictions)
     y_true = np.concatenate(all_gold)
 
-    logging.debug("Acc.: %2.2f%%; F-macro: %2.2f%%\n" % (accuracy_score(y_true, y_pred) * 100,
+    logging.info("    Acc.: %2.2f%%; F-macro: %2.2f%%\n" % (accuracy_score(y_true, y_pred) * 100,
                                                          f1_score(y_true, y_pred, average="macro") * 100))
 
 
 @hydra.main("configs", "config")
 def main(cfg):
-    train_labels = {l: i for i, l in enumerate(sorted([p.strip("/") for p in listdir(cfg.data.train_path)]))}
+    root = logging.getLogger()
 
-    train_set = GlyphData(root=cfg.data.train_path, class_to_idx=train_labels,
+    train_path = os.path.join(hydra.utils.get_original_cwd(), cfg.data.train_path)
+    test_path = os.path.join(hydra.utils.get_original_cwd(), cfg.data.test_path)
+
+    train_labels = {l: i for i, l in enumerate(sorted([p.strip("/") for p in listdir(train_path)]))}
+
+    train_set = GlyphData(root=train_path, class_to_idx=train_labels,
                           transform=transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                                         transforms.ToTensor()]))
 
@@ -136,10 +142,10 @@ def main(cfg):
 
     #  FINAL EVALUATION
 
-    test_labels_set = {l for l in [p.strip("/") for p in listdir(cfg.data.test_path)]}
+    test_labels_set = {l for l in [p.strip("/") for p in listdir(test_path)]}
     test_labels = {k: v for k, v in train_labels.items() if k in test_labels_set}
 
-    test_set = GlyphData(root=cfg.data.test_path, class_to_idx=test_labels,
+    test_set = GlyphData(root=test_path, class_to_idx=test_labels,
                          transform=transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                                        transforms.ToTensor()]))
 
@@ -151,7 +157,5 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
 
     main()
