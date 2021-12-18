@@ -9,7 +9,7 @@ Hieroglyph Recognition by Retrieving Images as Texts", 2013](https://jvgemert.gi
 (NB! Glyphnet paper uses a larger dataset).
 
 
-![what](/sample_images/230128_G17.png) | ![a](/sample_images/230067_G26.png) | ![pretty](/sample_images/230034_G25.png) | ![pretty](/sample_images/230092_G4.png) | ![pretty](/sample_images/230084_G5.png) | ![pretty](/sample_images/230178_G43.png) 
+![what](/sample_images/230128_G17.png) | ![a](/sample_images/230067_G26.png) | ![pretty](/sample_images/230034_G25.png) | ![bird](/sample_images/230092_G4.png) | ![you](/sample_images/230084_G5.png) | ![are](/sample_images/230178_G43.png) 
 ------------ | ------------- | ------------- | ------------- | ------------- | -------------
 G17 | G26 | G25 | G4 | G5 | G43
 
