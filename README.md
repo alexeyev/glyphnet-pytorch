@@ -9,9 +9,9 @@ Hieroglyph Recognition by Retrieving Images as Texts", 2013](https://jvgemert.gi
 (NB! Glyphnet paper uses a larger dataset).
 
 
-**Image** | ![aren't they pretty](/sample_images/230128_G17.png) | ![aren't they pretty](/sample_images/230067_G26.png) | ![aren't they pretty](/sample_images/230034_G25.png) 
------------- | ------------ | ------------- | -------------
-**Gardiner code** | G17 | G26 | G25
+![what](/sample_images/230128_G17.png) | ![a](/sample_images/230067_G26.png) | ![pretty](/sample_images/230034_G25.png) | ![pretty](/sample_images/230092_G4.png) | ![pretty](/sample_images/230084_G5.png) | ![pretty](/sample_images/230178_G43.png) 
+------------ | ------------- | ------------- | ------------- | ------------- | -------------
+G17 | G26 | G25 | G4 | G5 | G43
 
 We hope that this implementation of the model will encourage
 the further research in this direction.
