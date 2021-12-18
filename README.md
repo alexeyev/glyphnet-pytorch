@@ -38,7 +38,7 @@ Training script `main.py` uses standard **hydra** configuration mechanism; the p
 at the CLI call can be found in `configs/...`.
 
 ```bash
-python3 main.py model.epochs=2
+python3 main.py model.epochs=10
 ``` 
 
 ## How to cite
