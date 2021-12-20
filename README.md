@@ -1,5 +1,7 @@
 # glyphnet-pytorch
 
+![Python 3x](https://img.shields.io/badge/python-3.x-blue.svg)
+
 This repository presents a custom (non-official) PyTorch-based implementation of the **Glyphnet** 
 classifier introduced in the work [A Deep Learning Approach 
 to Ancient Egyptian Hieroglyphs 
@@ -13,7 +15,6 @@ Hieroglyph Recognition by Retrieving Images as Texts", 2013](https://jvgemert.gi
 ------------ | ------------- | ------------- | ------------- | ------------- | -------------
 G17 | G26 | G25 | G4 | G5 | G43
 
-![Python 3x](https://img.shields.io/badge/python-3.x-blue.svg)
 
 We hope that this implementation of the model will encourage
 the further research in this direction.
