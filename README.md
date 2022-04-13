@@ -19,6 +19,10 @@ G17 | G26 | G25 | G4 | G5 | G43
 We hope that this implementation of the model will encourage
 the further research in this direction.
 
+
+**UPDATE** April 2022: [the original AUTHORS' CODE](https://github.com/GAIA-IFAC-CNR/Glyphnet) is now available.
+
+
 ## Requirements
 
 Please see `requirements.txt`.
