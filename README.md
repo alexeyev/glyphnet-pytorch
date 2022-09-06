@@ -6,7 +6,7 @@ This repository presents a custom (non-official) PyTorch-based implementation of
 classifier introduced in the work [A Deep Learning Approach 
 to Ancient Egyptian Hieroglyphs 
 Classification, 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9528382) 
-and apply it to the data accompanying the work ["Automatic Egyptian 
+and applies it to the data accompanying the work ["Automatic Egyptian 
 Hieroglyph Recognition by Retrieving Images as Texts", 2013](https://jvgemert.github.io/pub/FrankenACMMM13egyptian.pdf) 
 (NB! Glyphnet paper uses a larger dataset).
 
